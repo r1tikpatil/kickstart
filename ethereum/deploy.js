@@ -3,8 +3,8 @@ const { Web3 } = require("web3");
 const compiledFactory = require("./build/CampaignFactory.json");
 
 const provider = new HDWalletProvider(
-  "erupt xxx replace aspect xxxx bitter obscure rug idea network xxx daring",
-  "https://sepolia.infura.io/v3/f133e4dfaae343439dd06ec10f2e6xxx"
+  "erupt bag replace aspect lend bitter obscure rug idea network spy daring",
+  "https://sepolia.infura.io/v3/f133e4dfaae343439dd06ec10f2e68a6"
 );
 
 const web3 = new Web3(provider);
