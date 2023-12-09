@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Card, Grid } from "semantic-ui-react";
+import { Card, Grid, Button } from "semantic-ui-react";
 
 import web3 from "../../ethereum/web3";
 import Layout from "../../components/Layout";
 import Campaign from "../../ethereum/campaign";
 import ContributeForm from "../../components/ContributeForm";
+import { Link } from "../../routes";
 
 const CampaignShow = () => {
   const router = useRouter();
@@ -21,6 +22,8 @@ const CampaignShow = () => {
 
   useEffect(() => {
     const handleRouteChange = async (url) => {
+      const currentPath = router.asPath;
+      console.log(currentPath);
       const campaign = Campaign(url.slice(11));
       const summary = await campaign.methods.getSummary().call();
 
@@ -35,12 +38,7 @@ const CampaignShow = () => {
 
       setValues(obj);
     };
-
-    router.events.on("routeChangeComplete", handleRouteChange);
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-    };
-  }, [router.pathname]);
+  }, [router.asPath]);
 
   const renderCards = () => {
     const {
@@ -92,7 +90,14 @@ const CampaignShow = () => {
     <Layout>
       <h3>Campaign Show!!</h3>
       <Grid>
-        <Grid.Column width={10}>{renderCards()}</Grid.Column>
+        <Grid.Column width={10}>
+          {renderCards()}
+          <Link route={`/campaigns/${values.address}/requests`}>
+            <a>
+              <Button primary>View Requests</Button>
+            </a>
+          </Link>
+        </Grid.Column>
         <Grid.Column width={6}>
           <ContributeForm address={values.address} />
         </Grid.Column>

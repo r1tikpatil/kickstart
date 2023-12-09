@@ -17,6 +17,7 @@ const CampaignNew = () => {
     setErrorMsg("");
 
     try {
+      console.log(parseInt(minContribution));
       const accounts = await web3.eth.getAccounts();
       await Factory.methods.createCampaign(minContribution).send({
         from: accounts[0],
