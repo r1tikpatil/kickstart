@@ -21,10 +21,9 @@ const CampaignShow = () => {
   });
 
   useEffect(() => {
-    const handleRouteChange = async (url) => {
+    const handleRouteChange = async () => {
       const currentPath = router.asPath;
-      console.log(currentPath);
-      const campaign = Campaign(url.slice(11));
+      const campaign = Campaign(currentPath.slice(11));
       const summary = await campaign.methods.getSummary().call();
 
       const obj = {
@@ -33,11 +32,12 @@ const CampaignShow = () => {
         requestsCount: summary[2],
         approversCount: summary[3],
         manager: summary[4],
-        address: url.slice(11),
+        address: currentPath.slice(11),
       };
 
       setValues(obj);
     };
+    handleRouteChange();
   }, [router.asPath]);
 
   const renderCards = () => {
@@ -90,17 +90,21 @@ const CampaignShow = () => {
     <Layout>
       <h3>Campaign Show!!</h3>
       <Grid>
-        <Grid.Column width={10}>
-          {renderCards()}
-          <Link route={`/campaigns/${values.address}/requests`}>
-            <a>
-              <Button primary>View Requests</Button>
-            </a>
-          </Link>
-        </Grid.Column>
-        <Grid.Column width={6}>
-          <ContributeForm address={values.address} />
-        </Grid.Column>
+        <Grid.Row>
+          <Grid.Column width={10}>{renderCards()}</Grid.Column>
+          <Grid.Column width={6}>
+            <ContributeForm address={values.address} />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column>
+            <Link route={`/campaigns/${values.address}/requests`}>
+              <a>
+                <Button primary>View Requests</Button>
+              </a>
+            </Link>
+          </Grid.Column>
+        </Grid.Row>
       </Grid>
     </Layout>
   );

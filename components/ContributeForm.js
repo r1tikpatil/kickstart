@@ -7,15 +7,15 @@ import { Router } from "../routes";
 
 const ContributeForm = ({ address }) => {
   const [value, setValue] = useState("");
-  const [loading, setLoading] = useState("");
+  const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg("");
-    const campaign = Campaign(address);
     setLoading(true);
     try {
+      const campaign = Campaign(address);
       const accounts = await web3.eth.getAccounts();
       await campaign.methods.contribute().send({
         from: accounts[0],
