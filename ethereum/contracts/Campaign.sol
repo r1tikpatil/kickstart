@@ -1,14 +1,18 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.8.9;
 
 contract CampaignFactory {
-    address[] public deployedCampaigns;
+    address payable[] public deployedCampaigns;
 
     function createCampaign(uint minimum) public {
-        address newCampaign = new Campaign(minimum, msg.sender);
-        deployedCampaigns.push(newCampaign);
+        address newCampaign = address(new Campaign(minimum, msg.sender));
+        deployedCampaigns.push(payable(newCampaign));
     }
 
-    function getDeployedCampaigns() public view returns (address[]) {
+    function getDeployedCampaigns()
+        public
+        view
+        returns (address payable[] memory)
+    {
         return deployedCampaigns;
     }
 }
@@ -34,7 +38,7 @@ contract Campaign {
         _;
     }
 
-    function Campaign(uint minimum, address creator) public {
+    constructor(uint minimum, address creator) {
         manager = creator;
         minimumContribution = minimum;
     }
@@ -47,19 +51,16 @@ contract Campaign {
     }
 
     function createRequest(
-        string description,
+        string memory description,
         uint value,
         address recipient
     ) public restricted {
-        Request memory newRequest = Request({
-            description: description,
-            value: value,
-            recipient: recipient,
-            complete: false,
-            approvalCount: 0
-        });
-
-        requests.push(newRequest);
+        Request storage newRequest = requests.push();
+        newRequest.description = description;
+        newRequest.value = value;
+        newRequest.recipient = recipient;
+        newRequest.complete = false;
+        newRequest.approvalCount = 0;
     }
 
     function approveRequest(uint index) public {
@@ -78,7 +79,7 @@ contract Campaign {
         require(request.approvalCount > (approversCount / 2));
         require(!request.complete);
 
-        request.recipient.transfer(request.value);
+        payable(request.recipient).transfer(request.value);
         request.complete = true;
     }
 
@@ -89,7 +90,7 @@ contract Campaign {
     {
         return (
             minimumContribution,
-            this.balance,
+            address(this).balance,
             requests.length,
             approversCount,
             manager
