@@ -32,7 +32,7 @@ const RequestIndex = () => {
       );
 
       setRequests(requests);
-      setRequestsCount(requestCount);
+      setRequestsCount(parseInt(requestCount));
       setApproversCount(approversCount);
     };
     handleRouteChange();
@@ -59,7 +59,9 @@ const RequestIndex = () => {
       <h3>Request</h3>
       <Link route={`/campaigns/${address}/requests/new`}>
         <a>
-          <Button primary>Add Request</Button>
+          <Button primary floated="right" style={{ marginBottom: "10px" }}>
+            Add Request
+          </Button>
         </a>
       </Link>
 
@@ -78,6 +80,7 @@ const RequestIndex = () => {
 
         <Body>{renderRows()}</Body>
       </Table>
+      <div>Found {requestsCount} requests</div>
     </Layout>
   );
 };
